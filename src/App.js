@@ -1,31 +1,35 @@
 import React from 'react';
 import './App.css';
 
+let MyContext = React.createContext();
+
 function App() {
-  let [currentUser, setCurrentUser] = React.useState('');
+  let [currentUser, setCurrentUser] = React.useState(null);
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-      }}
-    >
-      <div style={{ backgroundColor: 'lightgray' }}>
-        <Header />
+    <MyContext.Provider value={{ currentUser }}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+        }}
+      >
+        <div style={{ backgroundColor: 'lightgray' }}>
+          <Header />
+        </div>
+        <div style={{ flex: 1 }}>
+          {currentUser ? (
+            <Dashboard />
+          ) : (
+            <LoginScreen onLogin={() => setCurrentUser({ name: 'Michael' })} />
+          )}
+        </div>
+        <div style={{ backgroundColor: 'lightgray' }}>
+          <Footer />
+        </div>
       </div>
-      <div style={{ flex: 1 }}>
-        {currentUser ? (
-          <Dashboard user={currentUser} />
-        ) : (
-          <LoginScreen onLogin={() => setCurrentUser({ name: 'Michael' })} />
-        )}
-      </div>
-      <div style={{ backgroundColor: 'lightgray' }}>
-        <Footer />
-      </div>
-    </div>
+    </MyContext.Provider>
   );
 }
 
@@ -48,29 +52,30 @@ function LoginScreen({ onLogin }) {
   );
 }
 
-function Dashboard({ user }) {
+function Dashboard() {
   return (
     <div>
       <h2>The Dashboard</h2>
       <DashboardNav />
-      <DashboardContent user={user} />
+      <DashboardContent />
     </div>
   );
 }
 
-function DashboardContent({ user }) {
+function DashboardContent() {
   return (
     <div>
       <h3>Dashboard Content</h3>
-      <WelcomeMessage user={user} />
+      <WelcomeMessage />
     </div>
   );
 }
 
-function WelcomeMessage({ user }) {
+function WelcomeMessage() {
+  let { currentUser } = React.useContext(MyContext);
   return (
     <div>
-      <p>Welcome {user.name}</p>
+      <p>Welcome {currentUser.name}</p>
     </div>
   );
 }

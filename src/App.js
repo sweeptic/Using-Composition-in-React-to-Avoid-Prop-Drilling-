@@ -1,35 +1,71 @@
 import React from 'react';
 import './App.css';
 
-let MyContext = React.createContext();
-
 function App() {
-  let [currentUser, setCurrentUser] = React.useState(null);
+  let [currentUser, setCurrentUser] = React.useState('');
 
   return (
-    <MyContext.Provider value={{ currentUser }}>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-        }}
-      >
-        <div style={{ backgroundColor: 'lightgray' }}>
-          <Header />
-        </div>
-        <div style={{ flex: 1 }}>
-          {currentUser ? (
-            <Dashboard />
-          ) : (
-            <LoginScreen onLogin={() => setCurrentUser({ name: 'Michael' })} />
-          )}
-        </div>
-        <div style={{ backgroundColor: 'lightgray' }}>
-          <Footer />
-        </div>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+      }}
+    >
+      <div style={{ backgroundColor: 'lightgray' }}>
+        <Header />
       </div>
-    </MyContext.Provider>
+      <div style={{ flex: 1 }}>
+        {currentUser ? (
+          <Dashboard>
+            <DashboardNav />
+            <DashboardContent>
+              <WelcomeMessage user={currentUser} />
+            </DashboardContent>
+          </Dashboard>
+        ) : (
+          <LoginScreen onLogin={() => setCurrentUser({ name: 'Michael' })} />
+        )}
+      </div>
+      <div style={{ backgroundColor: 'lightgray' }}>
+        <Footer />
+      </div>
+    </div>
+  );
+}
+
+function Dashboard({ children }) {
+  return (
+    <div>
+      <h2>The Dashboard</h2>
+      {children}
+    </div>
+  );
+}
+
+function DashboardContent({ children }) {
+  return (
+    <div>
+      <h3>Dashboard Content</h3>
+      {children}
+    </div>
+  );
+}
+
+// function DashboardContent({ user }) {
+//   return (
+//     <div>
+//       <h3>Dashboard Content</h3>
+//       <WelcomeMessage user={user} />
+//     </div>
+//   );
+// }
+
+function DashboardNav() {
+  return (
+    <div>
+      <h3>Dashboard Nav</h3>
+    </div>
   );
 }
 
@@ -52,38 +88,10 @@ function LoginScreen({ onLogin }) {
   );
 }
 
-function Dashboard() {
+function WelcomeMessage({ user }) {
   return (
     <div>
-      <h2>The Dashboard</h2>
-      <DashboardNav />
-      <DashboardContent />
-    </div>
-  );
-}
-
-function DashboardContent() {
-  return (
-    <div>
-      <h3>Dashboard Content</h3>
-      <WelcomeMessage />
-    </div>
-  );
-}
-
-function WelcomeMessage() {
-  let { currentUser } = React.useContext(MyContext);
-  return (
-    <div>
-      <p>Welcome {currentUser.name}</p>
-    </div>
-  );
-}
-
-function DashboardNav() {
-  return (
-    <div>
-      <h3>Dashboard Nav</h3>
+      <p>Welcome {user.name}</p>
     </div>
   );
 }
